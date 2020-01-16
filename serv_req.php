@@ -19,25 +19,24 @@ for ($x =0; $x <count($form_data); $x++){
 }
 $comm_txt."<br/>";
 $command = escapeshellcmd("python serv_req.py{$comm_txt}");
-
+//echo ($command."<br/>");
 
 
 $output = shell_exec($command." 2> error.log");
 $output = trim($output);
-echo ($output."<br/>");
+//echo ($output."<br/>");
 ?>
 
 <?php
 $name  ="CCEService";
 $email  ="service@cce-service.ca";
-$fetch_message  ="Service Request Incoming!<br/><br/>";
+$fetch_message  = "<b>Submitted By:</b> ".$_POST["req_person"]."<br/>";
+$fetch_message .= "<b>Requested Engineer: </b>".$_POST["req_engineer"]."<br/><br/>";
 $fetch_message .= "<b>Date: </b>".$_POST["req_date"]." @ ".$_POST["req_time"]."<br/>";
 $fetch_message .= "<b>Client: </b>".$_POST["req_client"]."<br/>";
 $fetch_message .= "<b>Address: </b>".$_POST["req_address"]."<br/>";
 $fetch_message .= "<b>Systems: </b>".$_POST["req_systems"]."<br/>";
 $fetch_message .= "<b>Description: </b>".$_POST["req_desc"]."<br/>";
-
-
 
 $fetch_subject ="Service Request";
 
@@ -64,7 +63,8 @@ else {echo "None of the above my friend</br>";}
 
 if ($file_type == 'pdf' || $file_type == 'doc' || $file_type == 'docx' )
   {
-   $to = "sbrukson@gmail.com, alex@ccemedical.com";
+//   $to = "sbrukson@gmail.com, alex@ccemedical.com";
+   $to = "tracy.r@ccemedical.com, w.alayoubi@ccemedical.com, alex@ccemedical.com";
    $subject =  $fetch_subject;
    $bound_text = "_____________________";
    $bound = "--".$bound_text."\r\n";
@@ -81,7 +81,7 @@ if ($file_type == 'pdf' || $file_type == 'doc' || $file_type == 'docx' )
 
    $message .= "Content-Type: text/html; charset=\"iso-8859-1\"\r\n"
    ."Content-Transfer-Encoding: 7bit\r\n\r\n"
-   ."<b>Message: </b> ".$fetch_message." \r\n"
+   ."<b><u>Service Request Incoming!</b></u><br/><br/>".$fetch_message." \r\n"
    .$bound;
 
    $file = file_get_contents($tmp_path);
@@ -97,7 +97,7 @@ if ($file_type == 'pdf' || $file_type == 'doc' || $file_type == 'docx' )
    if(mail($to, $subject, $message, $headers))
    {
     echo '<script language="javascript">alert("Message sent.");</script>';
-    echo "<script>  location.replace(\"https://cce-service.ca\")</script>";
+    echo "<script>  location.replace(\"http://cce-service.ca\")</script>";
 }
    else
    {
