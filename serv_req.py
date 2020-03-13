@@ -1,16 +1,17 @@
-from docx import Document
+#Import necessary libraries
+from docx import Document #docx manipulation library
 from sys import argv
 import os.path
 from datetime import datetime
 
+import boto3 #AWS Python SDK library
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
+ses = boto3.client('ses')
 
-script, req_date,req_time,req_client,req_department,req_address,req_phone,req_contact,req_system,type,req_desc = argv
 
-#file_name = "output_text.txt"
-#txt = open(file_name,"a")
-#print "-------------------File is Opening--------</br>"
-#print "------------------------------------------</br>" 
-#txt.write(req_date + " is the date!\n")
+script, req_date,req_time,req_client,req_department,req_address,req_phone,req_contact,req_system,type,req_desc,req_nameof,engineer = argv
 
 template = Document('S_R_F.docx')
 
@@ -51,27 +52,36 @@ tab.cell(9,1).paragraphs[0].text = req_desc
 newFileName = req_client+'_'+datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 newFileName = 'S_Req_'+newFileName.replace(" ", "_")+'.docx'
 newFile.save(newFileName)
-print (newFileName)
 #newFile.close()
 
-"""/*
-print req_date," is Date</br>"
-print req_time," is Time</br>"
-print req_client," is Client</br>"
-print req_department," is department</br>"
-print req_address," is address</br>"
-print req_phone," is Phone</br>"
-print req_contact," is Contact</br>"
-print req_system," is System</br>"
-print type," is Type</br>"
-print req_desc," is Description</br>"
+"""
+This section is for sending the email using AWS raw email via SES
 """
 
-#txt.close()
-#print "-------------------File Closed-------------</br>"
-#print "-------------------------------------------</br>"
+message = MIMEMultipart()
+message['Subject'] = 'Incoming Service Request'
+message['From'] = 'CCE-Service <service@cce-service.ca>'
+message['To'] = ', '.join(['sbrukson@gmail.com', 'alex@ccemedical.com'])
+# message body
+body_string = 'Submitted By: '+req_nameof+'<br/> Requested Engineer: '+engineer+' <br/><br/>'
+body_string += 'Date: '+req_date+'<br/> Client: '+req_client+' <br/> Address: '+req_address
+body_string += '<br/> Systems: '+req_system+'<br/> Description: '+req_desc
 
-#print("This is fun.</br>")
-#print('Yay! Printing')
-#print("I'd much rather you </br>")
-#print('I "said" do not touch this.</br>')
+
+part = MIMEText(body_string, 'html')
+message.attach(part)
+# attachment
+
+part = MIMEApplication(open(newFileName, 'rb').read())
+
+part.add_header('Content-Disposition', 'attachment', filename=newFileName)
+message.attach(part)
+response = ses.send_raw_email(
+    Source=message['From'],
+    Destinations=['sbrukson@gmail.com', 'alex@ccemedical.com'],
+    RawMessage={
+        'Data': message.as_string()
+    }
+)
+
+print(response)

@@ -1,5 +1,5 @@
 <?php
-//
+
 $form_data = array($_POST["req_date"],
 	$_POST["req_time"],
 	$_POST["req_client"],
@@ -9,8 +9,10 @@ $form_data = array($_POST["req_date"],
 	$_POST["req_contact"],
 	$_POST["req_systems"],
 	$_POST["type"],
-	$_POST["req_desc"]);
-$service_person = $_POST["engineer"];
+	$_POST["req_desc"],
+	$_POST["req_person"],
+	$_POST["req_engineer"]);
+
 $bad_char = array ('\"','$');
 $comm_txt = "";
 for ($x =0; $x <count($form_data); $x++){
@@ -23,11 +25,12 @@ $command = escapeshellcmd("python serv_req.py{$comm_txt}");
 
 
 $output = shell_exec($command." 2> error.log");
-$output = trim($output);
+//$output = trim($output);
 //echo ($output."<br/>");
 ?>
 
 <?php
+/*
 $name  ="CCEService";
 $email  ="service@cce-service.ca";
 $fetch_message  = "<b>Submitted By:</b> ".$_POST["req_person"]."<br/>";
@@ -63,8 +66,8 @@ else {echo "None of the above my friend</br>";}
 
 if ($file_type == 'pdf' || $file_type == 'doc' || $file_type == 'docx' )
   {
-//   $to = "sbrukson@gmail.com, alex@ccemedical.com";
-   $to = "tracy.r@ccemedical.com, w.alayoubi@ccemedical.com, alex@ccemedical.com";
+   $to = "sbrukson@gmail.com, alex@ccemedical.com";
+//   $to = "tracy.r@ccemedical.com, w.alayoubi@ccemedical.com, alex@ccemedical.com";
    $subject =  $fetch_subject;
    $bound_text = "_____________________";
    $bound = "--".$bound_text."\r\n";
@@ -96,8 +99,6 @@ if ($file_type == 'pdf' || $file_type == 'doc' || $file_type == 'docx' )
 
    if(mail($to, $subject, $message, $headers))
    {
-    echo '<script language="javascript">alert("Message sent.");</script>';
-    echo "<script>  location.replace(\"http://cce-service.ca\")</script>";
 }
    else
    {
@@ -109,5 +110,8 @@ if ($file_type == 'pdf' || $file_type == 'doc' || $file_type == 'docx' )
   {
    echo 'Invalid uploaded file type!';
   }
+*/
+//echo '<script language="javascript">alert("Message sent.");</script>';    
+echo "<script>  location.replace(\"http://cce-service.ca\")</script>";
 
 ?>
