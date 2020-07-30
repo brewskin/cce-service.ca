@@ -61,7 +61,7 @@ This section is for sending the email using AWS raw email via SES
 message = MIMEMultipart()
 message['Subject'] = 'Incoming Service Request'
 message['From'] = 'CCE-Service <service@cce-service.ca>'
-message['To'] = ', '.join(['sbrukson@gmail.com', 'alex@ccemedical.com'])
+message['To'] = ', '.join(['example@gmail.com', 'example2@gmail.com'])
 # message body
 body_string = 'Submitted By: '+req_nameof+'<br/> Requested Engineer: '+engineer+' <br/><br/>'
 body_string += 'Date: '+req_date+'<br/> Client: '+req_client+' <br/> Address: '+req_address
